@@ -12,7 +12,7 @@
 (abs 3)
 (abs 0)
 
-; Exercise 1.1
+; Exercise 1.1 
 
 (define a 3)
 (define b (+ a 1))
