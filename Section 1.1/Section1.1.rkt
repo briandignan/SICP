@@ -57,4 +57,57 @@
       0
       y) )
 
-(test 0 (p))
+;; commented out because it causes a compile error (should cause an infinite loop??)
+;;(test 0 (p))
+
+
+; Example 1.1.7 (Square root approximation)
+
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x)
+                 x)))
+
+(define (improve guess x)
+  (average guess (/ x guess)))
+
+(define (average x y)
+  (/ (+ x y) 2))
+
+(define (square x)
+  (* x x))
+
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001))
+
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+
+(sqrt 9)
+
+
+; Exercise 1.8
+
+
+
+
+(define (cbrt-iter guess x)
+  (if (good-enough-cbrt? guess x)
+      guess
+      (cbrt-iter (improve-cbrt guess x)
+                 x)))
+
+; if abs((guess^3 - x) / x) < .0001 then true else false
+(define (good-enough-cbrt? guess x)
+  (< (abs (/ (- (* guess guess guess) x) x )) .0001))
+
+
+(define (improve-cbrt y x)
+  (/ (+ (/ x (* y y )) (* 2 y )) 3))
+  
+(define (cbrt x)
+  (cbrt-iter 1.0 x))
+
+(cbrt .00000001)
+(cbrt 100000000)
