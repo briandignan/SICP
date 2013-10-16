@@ -24,7 +24,8 @@
   
   (* (front-prefix h) (sum term 0 inc n)))
 
-(sum-integral cube 0 1 100)
+(sum-integral cube 0 1 10)
+(sum-integral cube 0 1 1000)
           
   
 

@@ -45,7 +45,7 @@
 
 
 (define (pi-div-4-approx n)
-  (product pi-approx-term 1 inc n))
+  (product pi-approx-term 1.0 inc n))
 
 
-(pi-div-4-approx 100)
+(* 4 (pi-div-4-approx 10000))
