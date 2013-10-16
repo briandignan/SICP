@@ -81,3 +81,9 @@
 (pi-approx-denom 4)
 (pi-approx-denom 5)
 (pi-approx-denom 6)
+
+
+
+(begin (display 'blah) (newline) (display 'bla2) (newline))
+
+(remainder 15 5)
