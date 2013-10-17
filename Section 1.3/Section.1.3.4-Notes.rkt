@@ -1,35 +1,15 @@
+(define (square x) (* x x))
 
-(define (close-enough? x y)
-  (< (abs (- x y)) .001))
+(define (average x y) (/ (+ x y) 2))
 
-(define (average x y) (/ (+ x y) 2.0))
+(define (average-damp f)
+  (lambda (x) (average x (f x))))
 
-(define (search f neg-point pos-point)
-  (let ((midpoint (average neg-point pos-point)))
-    (if (close-enough? neg-point pos-point)
-        midpoint
-        (let ((test-value (f midpoint)))
-          (cond ((positive? test-value) (search f neg-point midpoint))
-                ((negative? test-value) (search f midpoint pos-point))
-                (else midpoint))))))
-
-
-(define (half-interval-method f a b)
-  (let ((a-value (f a))
-        (b-value (f b)))
-    (cond ((and (negative? a-value) (positive? b-value) (search f a b)))
-          ((and (negative? b-value) (positive? a-value) (search f b a)))
-          (else (error "Values ar enot of opposite sign" a b)))))
-
-(half-interval-method sin 2.0 4.0)
-;(half-interval-method sin 4.0 6.0)  ; Produces an error (as expected) because sin(4) and sin(6) are both negative
-
-(half-interval-method (lambda (x) (- (* x x x) (* 2 x) 3))
-                      1.0
-                      2.0)
+((average-damp square) 10)  ; 'expands' to  (lambda (x) (average x (square x)))
 
 
 (define tolerance 0.00001)
+
 
 (define (fixed-point f first-guess)
   (define (close-enough? v1 v2)
@@ -41,21 +21,42 @@
           (try next))))
   (try first-guess))
 
-(fixed-point cos 1.0)
-
-(define (double x) (* 2 x))
-
-;(fixed-point double 1.0)  Runs forever (as expected)
-; Confirming the expectation that fixed-point runs forever on functions that don't converge
-
-(fixed-point (lambda (y) (+ (sin y) (cos y)))
-             1.0)
 
 (define (sqrt x)
+  (fixed-point (average-damp (lambda (y) (/ x y)))
+               1.0))
+
+(sqrt 100)
+
+
+; Somewhat hard to 'visualize' how it expands. Manual expansion:
+
+(define (sqrt-e1 x)
   (fixed-point (lambda (y) (average y (/ x y)))
                1.0))
 
-(sqrt 2)
-                                     
-                                     
-                                     
+(sqrt-e1 100)
+
+(define dx 0.00001)
+
+(define (deriv g)
+  (lambda (x)
+    (/ (- (g (+ x dx)) (g x))
+       dx)))
+
+(define (cube x) (* x x x))
+
+((deriv cube) 5)
+
+(define (newton-transform g)
+  (lambda (x)
+    (- x (/ (g x) ((deriv g) x)))))
+
+(define (newtons-method g guess)
+  (fixed-point (newton-transform g) guess))
+
+(define (sqrt-p75 x)
+  (newtons-method (lambda (y) (- (square y) x))
+                  1.0))
+
+(sqrt-p75 (sqrt-p75 100))
