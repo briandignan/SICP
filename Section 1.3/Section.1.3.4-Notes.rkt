@@ -7,6 +7,7 @@
 
 ((average-damp square) 10)  ; 'expands' to  (lambda (x) (average x (square x)))
 
+(define (logB x b) (/ (log x) (log b)))
 
 (define tolerance 0.00001)
 
